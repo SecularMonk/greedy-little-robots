@@ -68,8 +68,8 @@ function createNewTradeHistoryRecord(TradeItem, OpenPrice, Position) {
 function updateTradeHistoryRecord(TradeItem, openPrice, ClosePrice, Result) {
     let datetime = getCurrentTimeInSQLFormat();
     let selectSQL = `
-    SELECT id FROM tradehistory 
-    WHERE TradeItem = ${TradeItem} AND OpenPrice = ${openPrice}
+    SELECT idTradeHistory FROM tradehistory 
+    WHERE TradeItem = '${TradeItem}' AND OpenPrice = ${openPrice}
     ORDER BY OpenedAt DESC
     LIMIT 1`
 

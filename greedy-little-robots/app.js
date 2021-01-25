@@ -8,10 +8,10 @@ const storeReccomendationsLocally = require('./suggestionFetcher').storeReccomen
 const insertScrapedData = require('./suggestionFetcher').insertScrapedData
 
 const GBP_USD = new TradingBot();
-GBP_USD._TradeItem = 'GBP/USD'
+GBP_USD.TradeItem = 'GBP/USD'
 
 const EUR_USD = new TradingBot();
-EUR_USD._TradeItem = 'EUR/USD'
+EUR_USD.TradeItem = 'EUR/USD'
 
 const USD_JPY = new TradingBot();
 USD_JPY.TradeItem = 'USD/JPY'
@@ -118,7 +118,7 @@ function app() {
     setInterval(() => {
 
     getTradeRecommendations()
-    
+ 
 
     helpers.getRecommendations(GBP_USD._TradeItem).then((item) => GBP_USD.evaluateConditions(item))
 

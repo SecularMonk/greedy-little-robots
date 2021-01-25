@@ -82,7 +82,7 @@ class TradingBot {
         this.positionType = positionType;
         this.openPrice = parseFloat(recommendations[4].Price);
         console.log(`${positionType}ing ${this.TradeItem} at ${price}. DateTime: ${helpers.getCurrentTimeInSQLFormat()}`)
-        helpers.createNewTradeHistoryRecord(this.TradeItem, this.openPrice, positionType)
+        helpers.createNewTradeHistoryRecord(this._TradeItem, this.openPrice, positionType)
    }
 
    /* Closes the current position. Saves the result of the trade to the tradeHistory array as an object,
@@ -102,7 +102,7 @@ class TradingBot {
         this.Money += this.lastTradeResult;
         this.positionType = '';
 
-        helpers.updateTradeHistoryRecord(this.TradeItem, this.openPrice, this.closePrice, this.lastTradeResult)
+        helpers.updateTradeHistoryRecord(this._TradeItem, this.openPrice, this.closePrice, this.lastTradeResult)
    }
 }
 
