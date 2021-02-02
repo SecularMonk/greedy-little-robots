@@ -1,22 +1,11 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import TradeItems from './components/tradeItems';
+import TradeItems from './components/tradeItems/tradeItems';
+import TradeItem from './components/tradeItem/tradeItem'
+import SingleTradeItemChart from './components/singleTradeItemChart/container/singleTradeItemChartContainer'
 
 class App extends Component {
-
-  constructor() {
-    super();
-    this.state = {
-      tradeItems: []
-    }
-  }
-
-  componentDidMount() {
-    fetch('/api/tradeItems')
-      .then(res => res.json())
-      .then(tradeItems => this.setState({tradeItems}, () => console.log('Trade items fetched...', tradeItems)));
-  }
 
   render() {
     return (
@@ -25,7 +14,9 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">React Express Starter</h1>
         </header>
-        <TradeItems tradeItems={this.state.tradeItems}/>
+        <TradeItems />
+        <TradeItem />
+        <SingleTradeItemChart />
       </div>
     );
   }

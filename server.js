@@ -30,7 +30,7 @@ function runAsyncSQLQuery(sql) {
   }
 }
 
-function getListOfTradeItemsFromDatabase() {
+function getListOfTradeItems() {
   try {
       let sql = `SELECT DISTINCT TradeItem, Class from scrapeddata ORDER BY Class DESC;`
       return runAsyncSQLQuery(sql);
@@ -39,19 +39,39 @@ function getListOfTradeItemsFromDatabase() {
   }
 }
 
-app.get('/api/tradeItems', cors(), (req, res) => {
-  
-  getListOfTradeItemsFromDatabase().then((items) => 
-  res.json(items))
+function getMostRecentEntriesForTradeItem(tradeItem, entries=5) {
+  try {
+      let sql = `SELECT TradeItem, Suggestion, DateTime from scrapeddata WHERE TradeItem = '${tradeItem}' ORDER BY DateTime DESC LIMIT ${entries};`
+      return runAsyncSQLQuery(sql);
+  } catch(err) {
+      throw err;
+  }
+}
 
-  /*
-  const customers = [
-    {id: 1, firstName: 'John', lastName: 'Doe'},
-    {id: 2, firstName: 'Brad', lastName: 'Traversy'},
-    {id: 3, firstName: 'Mary', lastName: 'Swanson'},
-  ];
-  res.json(customers);
-  */
+function getTradeItemDetails(tradeItem) {
+  try {
+      let sql = `SELECT Price, Suggestion, DateTime from scrapeddata WHERE TradeItem = '${tradeItem}' ORDER BY DateTime DESC;`
+      return runAsyncSQLQuery(sql);
+  } catch(err) {
+      throw err;
+  }
+}
+
+app.get('/api/tradeItems', cors(), (req, res) => {
+  getListOfTradeItems().then((items) => 
+  res.json(items))
+});
+
+app.get('/api/tradeItems/:tradeItem', cors(), (req, res) => {
+  let tradeItem = req.params.tradeItem;
+  getMostRecentEntriesForTradeItem(tradeItem).then((entries) => {
+    res.json(entries);
+  });
+});
+
+app.get('/api/chartDetails/', cors(), (req, res) => {
+  getTradeItemDetails('DAX').then((items) => 
+  res.json(items))
 });
 
 const port = 5000;
