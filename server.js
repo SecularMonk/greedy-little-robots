@@ -50,7 +50,7 @@ function getMostRecentEntriesForTradeItem(tradeItem, entries=5) {
 
 function getTradeItemDetails(tradeItem) {
   try {
-      let sql = `SELECT Price, Suggestion, DateTime from scrapeddata WHERE TradeItem = '${tradeItem}' ORDER BY DateTime DESC;`
+      let sql = `SELECT Price, Suggestion, DateTime from scrapeddata WHERE TradeItem = '${tradeItem}' ORDER BY DateTime DESC LIMIT 100;`
       return runAsyncSQLQuery(sql);
   } catch(err) {
       throw err;
