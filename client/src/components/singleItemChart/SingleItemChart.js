@@ -11,10 +11,11 @@ class SingleItemChart extends Component {
         return(
             <div>
                     <ul>
-                        {
+                        { 
+                        this.props.tradeItemData ?
                             this.props.tradeItemData.map(data => {
                                 return <li>{data.TradeItem}</li>
-                        })
+                        }) : <li>No trade data fetched</li>
                     }
                     </ul>
             </div>

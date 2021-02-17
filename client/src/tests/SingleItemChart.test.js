@@ -11,18 +11,25 @@ const fetch = require('node-fetch')
 Enzyme.configure({ adapter: new Adapter() });
 
 describe('trade item chart', () => {
-    test('it renders', () => {
+    test('renders', () => {
         const element = shallow(<SingleItemChart />)
         expect(element.exists()).toBe(true);
     })
 
-    test('it displays props', () => {
+    test('displays tradeitems passed as props', () => {
         let tradeItemArray = [
             {TradeItem: 'DAX'},
             {TradeItem: 'GBP/USD'}
         ]
         const element = shallow(<SingleItemChart tradeItemData={tradeItemArray}/>)
 
-        expect(element.find(Children)).toHaveLength(3);
+        expect(element.text()).toContain('DAX')
+        expect(element.text()).toContain('GBP/USD')
+    })
+
+    test('displays message if no tradeitems passed', () => {
+        const element = shallow(<SingleItemChart />)
+
+        expect(element.text()).toContain('No trade data fetched')
     })
 });
