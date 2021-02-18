@@ -14,7 +14,7 @@ class SingleItemChart extends Component {
                         { 
                         this.props.tradeItemData ?
                             this.props.tradeItemData.map(data => {
-                                return <li>{data.TradeItem}</li>
+                                return <li key={data.idscrapedData}>{data.TradeItem}</li>
                         }) : <li>No trade data fetched</li>
                     }
                     </ul>
