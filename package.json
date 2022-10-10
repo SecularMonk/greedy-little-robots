@@ -11,7 +11,8 @@
     "express": "^4.17.1",
     "mysql": "^2.18.1",
     "nodemon": "^2.0.7",
-    "react-scripts": "^5.0.1"
+    "react-scripts": "^5.0.1",
+    "yargs": "^17.6.0"
   },
   "scripts": {
     "server": "nodemon server.js",
@@ -27,5 +28,5 @@
     "mysql": "^2.18.1",
     "nodemon": "^1.14.6"
   },
-  "homepage": "https://github.com/SecularMonk/greedy-little-robots#readme",
+  "homepage": "https://github.com/SecularMonk/greedy-little-robots#readme"
 }
