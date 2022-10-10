@@ -38,9 +38,9 @@ function runAsyncSQLQuery(sql) {
 }
 
   /* Connects to the database to return all the distinct trade items */
-function getListOfTradeItemsFromDatabase() {
+function getListOftradeItemsFromDatabase() {
     try {
-        let sql = `SELECT DISTINCT TradeItem, Class from scrapeddata ORDER BY Class DESC;`
+        let sql = `SELECT DISTINCT tradeItem, class from scrapeddata ORDER BY class DESC;`
         return runAsyncSQLQuery(sql);
     } catch(err) {
         throw err;
@@ -48,20 +48,20 @@ function getListOfTradeItemsFromDatabase() {
 }
 
 /* Looks at each trade item individually to see how volatile it is.
-    Volatility is how many times the suggestion has changed in a given time. */
-function calculateVolatility(TradeItem) {
+    Volatility is how many times the summary has changed in a given time. */
+function calculateVolatility(tradeItem) {
     try {
-        let sql = `SELECT TradeItem,
-            SUM(CASE WHEN Suggestion = 'Strong Buy' THEN 1 ELSE 0 END) AS StrongBuy, 
-            SUM(CASE WHEN Suggestion = 'Buy' THEN 1 ELSE 0 END) AS Buy,
-            SUM(CASE WHEN Suggestion = 'Neutral' THEN 1 ELSE 0 END) AS Neutral,
-            SUM(CASE WHEN Suggestion = 'Sell' THEN 1 ELSE 0 END) AS Sell,
-            SUM(CASE WHEN Suggestion = 'Strong Sell' THEN 1 ELSE 0 END) AS StrongSell,
-            (SUM(CASE WHEN Suggestion = 'Strong Buy' THEN 3 ELSE 0 END) + SUM(CASE WHEN Suggestion = 'Buy' THEN 1 ELSE 0 END)) - (SUM(CASE WHEN Suggestion = 'Sell' THEN 1 ELSE 0 END) + SUM(CASE WHEN Suggestion = 'Strong Sell' THEN 3 ELSE 0 END)) AS Volatility
+        let sql = `SELECT tradeItem,
+            SUM(CASE WHEN summary = 'Strong Buy' THEN 1 ELSE 0 END) AS StrongBuy, 
+            SUM(CASE WHEN summary = 'Buy' THEN 1 ELSE 0 END) AS Buy,
+            SUM(CASE WHEN summary = 'Neutral' THEN 1 ELSE 0 END) AS Neutral,
+            SUM(CASE WHEN summary = 'Sell' THEN 1 ELSE 0 END) AS Sell,
+            SUM(CASE WHEN summary = 'Strong Sell' THEN 1 ELSE 0 END) AS StrongSell,
+            (SUM(CASE WHEN summary = 'Strong Buy' THEN 3 ELSE 0 END) + SUM(CASE WHEN summary = 'Buy' THEN 1 ELSE 0 END)) - (SUM(CASE WHEN summary = 'Sell' THEN 1 ELSE 0 END) + SUM(CASE WHEN summary = 'Strong Sell' THEN 3 ELSE 0 END)) AS Volatility
             FROM (
                 SELECT * FROM scrapeddata
-                WHERE TradeItem = ${TradeItem}
-                ORDER BY DateTime DESC
+                WHERE tradeItem = ${tradeItem}
+                ORDER BY dateTime DESC
                 LIMIT 10
             ) AS SUBQUERY;`
         
@@ -71,37 +71,37 @@ function calculateVolatility(TradeItem) {
         }
     }
 
-function getRecommendations(TradeItem, numberOfRecommendations=5) {
+function getRecommendations(tradeItem, numberOfRecommendations=5) {
     try {
-        let sql = `SELECT * FROM scrapeddata WHERE TradeItem = '${TradeItem}' ORDER BY DateTime DESC LIMIT ${numberOfRecommendations};`;
+        let sql = `SELECT * FROM scrapeddata WHERE tradeItem = '${tradeItem}' ORDER BY dateTime DESC LIMIT ${numberOfRecommendations};`;
         return runAsyncSQLQuery(sql);
     } catch(err) {
         throw err;
     }
     }
 
-function createNewTradeHistoryRecord(TradeItem, OpenPrice, Position) {
+function createNewTradeHistoryRecord(tradeItem, Openprice, Position) {
     try {
         let datetime = getCurrentTimeInSQLFormat();
-        let sql = `INSERT INTO tradehistory (TradeItem, OpenPrice, Position, OpenedAt) VALUES ('${TradeItem}', ${OpenPrice}, '${Position}', '${datetime}');`
+        let sql = `INSERT INTO tradehistory (tradeItem, Openprice, Position, OpenedAt) VALUES ('${tradeItem}', ${Openprice}, '${Position}', '${datetime}');`
         return runAsyncSQLQuery(sql);
     } catch(err) {
         throw err;
     }
     }
 
-function updateTradeHistoryRecord(TradeItem, openPrice, ClosePrice, Result) {
+function updateTradeHistoryRecord(tradeItem, openprice, Closeprice, Result) {
     try {
         let datetime = getCurrentTimeInSQLFormat();
         let selectSQL = `
         SELECT idtradeHistory FROM tradehistory 
-        WHERE TradeItem = '${TradeItem}' AND OpenPrice = ${openPrice}
+        WHERE tradeItem = '${tradeItem}' AND Openprice = ${openprice}
         ORDER BY OpenedAt DESC
         LIMIT 1`
 
         let updateSQL = `
         UPDATE tradehistory 
-        SET ClosePrice = ${ClosePrice}, ClosedAt = '${datetime}', Result = ${Result}
+        SET Closeprice = ${Closeprice}, ClosedAt = '${datetime}', Result = ${Result}
         WHERE idtradeHistory =
         `
 
@@ -114,7 +114,7 @@ function updateTradeHistoryRecord(TradeItem, openPrice, ClosePrice, Result) {
 
 function evaluateThenTrade(tradingBot) {
     try {
-        getRecommendations(tradingBot._TradeItem).then((recommendations) => 
+        getRecommendations(tradingBot._tradeItem).then((recommendations) => 
         tradingBot.evaluateConditions(recommendations))
     } catch(err) {
         throw err;
@@ -143,7 +143,7 @@ function setFundsForTradingBots(tradingBotsArray) {
 
 module.exports.getCurrentTimeInSQLFormat = getCurrentTimeInSQLFormat
 module.exports.runAsyncSQLQuery = runAsyncSQLQuery
-module.exports.getListOfTradeItemsFromDatabase = getListOfTradeItemsFromDatabase
+module.exports.getListOftradeItemsFromDatabase = getListOftradeItemsFromDatabase
 module.exports.calculateVolatility = calculateVolatility
 module.exports.getRecommendations = getRecommendations
 module.exports.createNewTradeHistoryRecord = createNewTradeHistoryRecord

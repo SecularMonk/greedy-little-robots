@@ -25,7 +25,7 @@ class SingleItemChartToggle extends Component {
                         {
                             this.props.toggleData ? 
                                 this.props.toggleData.map(item => {
-                                    return <option key={item.idscrapedData} value={item.TradeItem}>{item.TradeItem}</option>
+                                    return <option key={item.idscrapedData} value={item.tradeItem}>{item.tradeItem}</option>
                                 }) : <option value="default">No data available</option>
                         }
                     </select>

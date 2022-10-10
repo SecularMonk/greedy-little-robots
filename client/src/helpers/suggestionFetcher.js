@@ -1,113 +1,83 @@
-const axios = require('axios');
-const mysql = require('mysql');
+const axios = require("axios");
+const mysql = require("mysql");
 
 const con = mysql.createConnection({
-	host: "localhost",
-	user: "root",
-	password: "password",
-	database: "investingdata"
-  });
-
-con.connect(function(err) {
-	if (err) throw err;
+   host: "localhost",
+   user: "root",
+   password: `[O4mSQwD*W2}28w,^"9Flb-9A5ysXJdr`,
+   database: "investing.com",
 });
 
-const getForexRecommendations = async () => {
-	try {
-		let { data } = await axios.get(
-			'https://www.investing.com/common/technical_summary/api.php?action=TSB_updateTab&tab=1&timeframe=60'
-		);
-	
-		return data.pairObjects;
-	} catch (error) {
-		throw error;
-	}
-};
+con.connect(function (err) {
+   if (err) throw err;
+});
 
-const getIndicesRecommendations = async () => {
-	try {
-		let { data } = await axios.get(
-			'https://www.investing.com/common/technical_summary/api.php?action=TSB_updateTab&tab=3&timeframe=60'
-		);
-	
-		return data.pairObjects;
-	} catch (error) {
-		throw error;
-	}
-};
+//Tab is the number required in the URL to receive recommendations for that instrument.
+const instruments = [
+   { instrumentName: "Forex", tabNumber: 1 },
+   { instrumentName: "Index", tabNumber: 3 },
+   { instrumentName: "Crypto", tabNumber: 4 },
+];
 
-const getCryptoRecommendations = async () => {
-	try {
-		let { data } = await axios.get(
-			'https://www.investing.com/common/technical_summary/api.php?action=TSB_updateTab&tab=4&timeframe=60'
-		);
-	
-		return data.pairObjects;
-	} catch (error) {
-		throw error;
-	}
-};
+getAllRecommendations({ instruments });
 
-async function storeReccomendationsLocally(recommendations, type) {
-	try {
-		let tempReccomendations = [];
-		Object.keys(recommendations).forEach(function(item) {
-			let a = recommendations[item].summaryLast.replace(/\,/g,'');
-			a = parseFloat(a,10);
-				tempReccomendations.push({
-					TradeItem: recommendations[item].summaryName,
-					Price: a,
-					Suggestion: recommendations[item].technicalSummary,
-					Class: type
-			});
-		});
-		return tempReccomendations;
-	} catch(error) {
-		throw error;
-	}
+async function getAllRecommendations({ instruments = [] }) {
+   try {
+      for (let i = 0, n = instruments.length; i < n; i++) {
+         const recommendations = await getRecommendation({ tab: instruments[i].tab });
+         const parsedRecommendations = parseRecommendations({ recommendations, instrumentName: instruments[i].instrumentName });
+         saveRecommendations({ parsedRecommendations });
+      }
+   } catch (error) {
+      console.log(error);
+   }
 }
 
-async function insertScrapedData (locallyStoredRecommendations) {
-	try {
-		 let date = new Date();   
-		 let datetime= date.toISOString().slice(0, 19).replace('T', ' '); 
-		 for (let i=0; i<locallyStoredRecommendations.length; i++) {
-			 if (locallyStoredRecommendations[i].TradeItem == '' || locallyStoredRecommendations[i].Price == '' || locallyStoredRecommendations[i].Suggestion == '') {
-				 continue;
-			 }
-		 var sql = `INSERT INTO scrapeddata (TradeItem, Price, Suggestion, DateTime, Class) VALUES ('${locallyStoredRecommendations[i].TradeItem}', ${locallyStoredRecommendations[i].Price}, '${locallyStoredRecommendations[i].Suggestion}', '${datetime}', '${locallyStoredRecommendations[i].Class}');`;
-		 con.query(sql, function (err, result) {
-		   if (err) throw err;
-		 });
-	   }
-	   } catch(error) {
-	   throw error;
+async function getRecommendation({ tab }) {
+   try {
+      let { data } = await axios.get(`https://www.investing.com/common/technical_summary/api.php?action=TSB_updateTab&tab=${tab}&timeframe=60`);
+      return data.pairObjects;
+   } catch (error) {
+      throw error;
    }
-   }
-
-function getTradeRecommendations() {
-
-	getForexRecommendations().then(
-		(result) => storeReccomendationsLocally(result, 'Forex')).then(
-			(result) => insertScrapedData(result)
-		)
-
-	getIndicesRecommendations().then(
-		(result) => storeReccomendationsLocally(result, 'Index')).then(
-			(result) => insertScrapedData(result)
-		)
-
-	getCryptoRecommendations().then(
-		(result) => storeReccomendationsLocally(result, 'Crypto')).then(
-			(result) => insertScrapedData(result)
-		)
 }
 
-getTradeRecommendations();
-setInterval(() => {
-	getTradeRecommendations();
-}, 60000);
+function parseRecommendations({ recommendations = [], instrumentName = "" }) {
+   try {
+      const tempReccomendations = [];
+      const keys = Object.keys(recommendations);
+      for (let i = 0, n = keys.length; i < n; i++) {
+         let price = recommendations[i].summaryLast.replace(/\,/g, "");
+         price = parseFloat(a, 10);
+         if (!a || isNaN(a)) continue;
+         const thisResult = {
+            tradeItem: recommendations[i]?.summaryName ?? "",
+            price,
+            summary: recommendations[i].technicalSummary,
+            class: instrumentName,
+         };
+         tempReccomendations.push(thisResult);
+      }
+      return tempReccomendations;
+   } catch (error) {
+      throw error;
+   }
+}
 
-module.exports.getTradeRecommendations = getTradeRecommendations;
-module.exports.storeReccomendationsLocally = storeReccomendationsLocally;
-module.exports.insertScrapedData = insertScrapedData;
+async function saveRecommendations({ parsedRecommendations }) {
+   try {
+      let date = new Date();
+      let datetime = date.toISOString().slice(0, 19).replace("T", " ");
+      for (let i = 0; i < parseRecommendations.length; i++) {
+         if (!parsedRecommendations[i].tradeItem || !parsedRecommendations[i].price || !parsedRecommendations[i].summary) continue;
+         const query = `INSERT INTO technical data (tradeItem, price, summary, dateTime, class) VALUES ('${parsedRecommendations[i].tradeItem}', ${parsedRecommendations[i].price}, '${parsedRecommendations[i].summary}', '${datetime}', '${parsedRecommendations[i].class}');`;
+         return con.query(query);
+      }
+   } catch (error) {
+      throw error;
+   }
+}
+
+module.exports.getRecommendation = getRecommendation;
+module.exports.parseRecommendations = parseRecommendations;
+module.exports.saveRecommendations = saveRecommendations;

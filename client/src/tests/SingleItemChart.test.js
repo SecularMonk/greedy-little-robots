@@ -47,9 +47,9 @@ describe('trade item chart toggle', () => {
     })
     test('renders props passed to it 1', () => {
         const toggleData = [
-            {idscrapedData: 0, TradeItem: 'GBP/USD'},
-            {idscrapedData: 3, TradeItem: 'BTC/EUR'},
-            {idscrapedData: 5, TradeItem: 'SP500'}
+            {idscrapedData: 0, tradeItem: 'GBP/USD'},
+            {idscrapedData: 3, tradeItem: 'BTC/EUR'},
+            {idscrapedData: 5, tradeItem: 'SP500'}
         ]
         const element = shallow(<SingleItemChartToggle toggleData={toggleData} />)
         expect(element.text()).toContain('GBP/USD')
@@ -59,9 +59,9 @@ describe('trade item chart toggle', () => {
 
     test('renders props passed to it 2', () => {
         const toggleData = [
-            {idscrapedData: 0, TradeItem: 'Mozambique'},
-            {idscrapedData: 3, TradeItem: 'Zanzibar'},
-            {idscrapedData: 5, TradeItem: 'Bolivia'}
+            {idscrapedData: 0, tradeItem: 'Mozambique'},
+            {idscrapedData: 3, tradeItem: 'Zanzibar'},
+            {idscrapedData: 5, tradeItem: 'Bolivia'}
         ]
         const element = shallow(<SingleItemChartToggle toggleData={toggleData} />)
         expect(element.text()).toContain('Mozambique')
@@ -83,8 +83,8 @@ describe('trade item chart', () => {
 
     test('displays tradeitems passed as props', () => {
         let tradeItemArray = [
-            {idscrapedData: 0, TradeItem: 'DAX'},
-            {idscrapedData: 1, TradeItem: 'GBP/USD'}
+            {idscrapedData: 0, tradeItem: 'DAX'},
+            {idscrapedData: 1, tradeItem: 'GBP/USD'}
         ]
         const element = shallow(<SingleItemChart tradeItemData={tradeItemArray}/>)
 

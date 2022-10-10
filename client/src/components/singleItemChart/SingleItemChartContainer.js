@@ -8,13 +8,13 @@ class SingleItemChartContainer extends Component {
         super()
         this.state = {
             tradeItemData: [
-                {idscrapedData: 0, TradeItem: 'GBP/USD'},
-                {idscrapedData: 1, TradeItem: 'DAX'}
+                {idscrapedData: 0, tradeItem: 'GBP/USD'},
+                {idscrapedData: 1, tradeItem: 'DAX'}
             ],
             toggleData: [
-                {idscrapedData: 0, TradeItem: 'GBP/USD'},
-                {idscrapedData: 3, TradeItem: 'BTC/EUR'},
-                {idscrapedData: 5, TradeItem: 'SP500'}
+                {idscrapedData: 0, tradeItem: 'GBP/USD'},
+                {idscrapedData: 3, tradeItem: 'BTC/EUR'},
+                {idscrapedData: 5, tradeItem: 'SP500'}
             ],
             selection: ''
         }
