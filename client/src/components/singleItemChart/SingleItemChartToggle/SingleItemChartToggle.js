@@ -1,38 +1,44 @@
-import React, { Component } from 'react'
+import React, { Component } from "react";
 
 class SingleItemChartToggle extends Component {
-    constructor(props) {
-        super(props)
-        
-        this.state = {
-            value: "default"
-        }
-        this.handleChange = this.handleChange.bind(this);
-    }
+   constructor(props) {
+      super(props);
 
-    handleChange(event) {
-        this.setState({
-            value: event.target.value
-        });
-        this.props.updateSelection(event.target.value);
-    }
+      this.state = {
+         value: "default",
+      };
+      this.handleChange = this.handleChange.bind(this);
+   }
 
-    render() {
-        return(
-            <div>
-                <label for="tradeItemToggle">
-                    <select value={this.state.value} onChange={this.handleChange}>
-                        {
-                            this.props.toggleData ? 
-                                this.props.toggleData.map(item => {
-                                    return <option key={item.idscrapedData} value={item.tradeItem}>{item.tradeItem}</option>
-                                }) : <option value="default">No data available</option>
-                        }
-                    </select>
-                </label>
-            </div>
-        )
-    }
+   handleChange(event) {
+      this.setState({
+         value: event.target.value,
+      });
+      console.log(`SingleItemChartToggle handleChange event.target.value: ${event.target.value}`);
+      this.props.updateSelection(event.target.value);
+   }
+
+   render() {
+      return (
+         <div>
+            <label htmlFor="tradeItemToggle">
+               <select value={this.state.value} onChange={this.handleChange}>
+                  {this.props.toggleData ? (
+                     this.props.toggleData.map((item) => {
+                        return (
+                           <option key={item.idinvesting} value={item.tradeItem}>
+                              {item.tradeItem}
+                           </option>
+                        );
+                     })
+                  ) : (
+                     <option value="default">No data available</option>
+                  )}
+               </select>
+            </label>
+         </div>
+      );
+   }
 }
 
 export default SingleItemChartToggle;
