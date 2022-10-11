@@ -1,50 +1,62 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 /*import './SingleItemChart.css'*/
-import SingleItemChart from './SingleItemChart/SingleItemChart'
-import SingleItemChartToggle from './SingleItemChartToggle/SingleItemChartToggle';
+import SingleItemChart from "./SingleItemChart/SingleItemChart";
+import SingleItemChartToggle from "./SingleItemChartToggle/SingleItemChartToggle";
 
 class SingleItemChartContainer extends Component {
-    constructor() {
-        super()
-        this.state = {
-            tradeItemData: [
-                {idscrapedData: 0, tradeItem: 'GBP/USD'},
-                {idscrapedData: 1, tradeItem: 'DAX'}
-            ],
-            toggleData: [
-                {idscrapedData: 0, tradeItem: 'GBP/USD'},
-                {idscrapedData: 3, tradeItem: 'BTC/EUR'},
-                {idscrapedData: 5, tradeItem: 'SP500'}
-            ],
-            selection: ''
-        }
-        this.updateSelection = this.updateSelection.bind(this);
-    }
+   constructor() {
+      super();
+      this.state = {
+         tradeItemData: [
+            { idinvesting: 0, tradeItem: "GBP/USD" },
+            { idinvesting: 1, tradeItem: "DAX" },
+            { idinvesting: 2, tradeItem: "TEST" },
+         ],
+         toggleData: [
+            { idinvesting: 0, tradeItem: "GBP/USD" },
+            { idinvesting: 3, tradeItem: "BTC/EUR" },
+            { idinvesting: 5, tradeItem: "SP500" },
+         ],
+         selection: "",
+      };
+      this.updateSelection = this.updateSelection.bind(this);
+   }
 
-    getChartData() {
-        fetch('/api/tradeItems')
-        .then((jsonResponse) => this.setState({tradeItemData: jsonResponse}))
-    }
+   componentDidMount() {
+      this.getToggleData();
+      this.getChartData();
+   }
 
-    getToggleData() {
-        fetch('/api/tradeItems')
-        .then((jsonResponse) => this.setState({toggleData: jsonResponse}))
-    }
+   async getChartData({ tradeItem }) {
+      const response = await fetch(`http://localhost:5000/api/tradeItems/${tradeItem}`);
+      const tradeItemData = await response.json();
+      console.log(`tradeItemData: ${JSON.stringify(tradeItemData)}`);
+      this.setState({ tradeItemData });
+   }
 
-    updateSelection(value) {
-        this.setState({
-            selection: value
-        })
-    }
+   async getToggleData() {
+      const response = await fetch("http://localhost:5000/api/allTradeItems");
+      const toggleData = await response.json();
+      console.log(`toggleData: ${JSON.stringify(toggleData)}`);
+      if (toggleData) this.setState({ toggleData });
+   }
 
-    render() {
-        return(
-            <div>
-                <SingleItemChartToggle toggleData={this.state.toggleData} updateSelection={this.updateSelection}/>
-                <SingleItemChart tradeItemData={this.state.tradeItemData} />
-            </div>
-        )
-    }
+   updateSelection(value) {
+      console.log(`SingleItemChartContainer handleChange value: ${value}`);
+      this.setState({
+         selection: value,
+      });
+      this.getChartData({ tradeItem: value });
+   }
+
+   render() {
+      return (
+         <div>
+            <SingleItemChartToggle toggleData={this.state.toggleData} updateSelection={this.updateSelection} />
+            <SingleItemChart key={this.state.tradeItemData} tradeItemData={this.state.tradeItemData} />
+         </div>
+      );
+   }
 }
 
 export default SingleItemChartContainer;
