@@ -28,10 +28,17 @@ class SingleItemChartContainer extends Component {
    }
 
    async getChartData({ tradeItem }) {
-      const response = await fetch(`http://localhost:5000/api/tradeItems/${tradeItem}`);
-      const tradeItemData = await response.json();
-      console.log(`tradeItemData: ${JSON.stringify(tradeItemData)}`);
-      this.setState({ tradeItemData });
+      try {
+         console.log(`getChartData`);
+         const response = await fetch(`http://localhost:5000/api/tradeItems/${tradeItem}`);
+         console.log(`response before parsing: ${JSON.stringify(response)}`);
+         const tradeItemData = await response.json();
+         console.log(`tradeItemData: ${JSON.stringify(tradeItemData)}`);
+         this.setState({ tradeItemData });
+      } catch (error) {
+         console.log(error);
+         this.setState({ tradeItemData: [] });
+      }
    }
 
    async getToggleData() {
