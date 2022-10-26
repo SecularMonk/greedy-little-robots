@@ -61,18 +61,11 @@ thead tr button {
    border: none;
 }
 
-.ascending {
-   display: none !important;
-}
-/* 
-table thead tr th button::after {
-   content: "▲";
-} */  
-
-table > .ascending:after {
-   content: "▲";
+.ascending:after {
+   /* content: "˄"; */
+   content: "   ↑";
 }
 
-table > .descending:after {
-   content: "▼";
+.descending:after {
+   content: "   ↓";
 }
