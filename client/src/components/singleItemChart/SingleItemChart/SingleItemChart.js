@@ -1,16 +1,13 @@
 import React, { Component } from "react";
-import fetch from "node-fetch";
+import Dygraph from "dygraphs";
 /*import './SingleItemChart.css'*/
 
-class SingleItemChart extends Component {
-   constructor(props) {
-      super(props);
-   }
-
-   renderChart() {
+export default function SingleItemChart({ tradeItemData }) {
+   function renderChart() {
       try {
-         if (this?.props?.tradeItemData && this.props.tradeItemData?.length !== 0) {
-            return this.props.tradeItemData.map((data) => {
+         console.log(`singleItemChart, tradeItemData: ${JSON.stringify(tradeItemData)}`);
+         if (tradeItemData && tradeItemData?.length !== 0) {
+            return tradeItemData.map((data) => {
                return (
                   <li key={data.idinvesting}>
                      <h2>{data.tradeItem}</h2>
@@ -28,13 +25,5 @@ class SingleItemChart extends Component {
       }
    }
 
-   render() {
-      return (
-         <div>
-            <ul>{this.renderChart()}</ul>
-         </div>
-      );
-   }
+   return <ul>{renderChart()}</ul>;
 }
-
-export default SingleItemChart;
