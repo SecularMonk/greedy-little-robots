@@ -1,0 +1,78 @@
+table {
+   min-width: 60%;
+   font-family: monospace;
+   border-collapse: collapse;
+   margin: auto;
+   padding: 10px;
+   font-size: 0.9em;
+}
+
+thead tr {
+   background-color: #009879;
+   color: #fff;
+   height: 40px;
+}
+
+thead tr button:hover {
+   background-color: #fff;
+   color: #000;
+}
+
+tbody tr:hover {
+   background-color: rgba(0, 0, 0, 0.084);
+   border-color: #000;
+   border-radius: 10px;
+   /* color: #fff; */
+}
+
+tbody tr td:hover {
+   background-color: rgba(0, 0, 0, 0.08);
+   font-weight: bold;
+   font-size: 1em;
+   /* color: #fff; */
+}
+
+tbody tr {
+   border-bottom: 1px solid #ddd;
+}
+
+tbody tr:nth-of-type(even) {
+   background-color: #000;
+   color: #fff;
+}
+
+td {
+   padding: 12px 15px;
+}
+
+thead tr button {
+   height: 100%;
+   width: 100%;
+   display: block;
+   font-weight: bold;
+   color: #fff;
+   background-color: inherit;
+   position: relative;
+   margin: 0.2em auto;
+   padding: 0.2em;
+   overflow: hidden;
+   outline: none;
+   border-radius: 0;
+   border: none;
+}
+
+.ascending {
+   display: none !important;
+}
+/* 
+table thead tr th button::after {
+   content: "▲";
+} */  
+
+table > .ascending:after {
+   content: "▲";
+}
+
+table > .descending:after {
+   content: "▼";
+}
